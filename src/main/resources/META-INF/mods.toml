@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[43,)"
+license="MIT"
+issueTrackerURL="https://github.com/qyl27/IA-DFU/issues"
+[[mods]]
+modId="iadfu"
+version="${file.jarVersion}"
+displayName="IA-DFU"
+displayURL="https://github.com/qyl27/IA-DFU"
+authors="qyl27"
+displayTest="MATCH_VERSION"
+description='''
+A library for using DataFixerUpper on Forge. (Proof of concept.)
+'''
+[[dependencies.iadfu]]
+    modId="forge"
+    mandatory=true
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.iadfu]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"
