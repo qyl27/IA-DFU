@@ -8,9 +8,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class DFUHolderProvider implements ICapabilitySerializable<CompoundTag> {
     private final IDFUHolder holder = new DFUHolder();
     private final LazyOptional<IDFUHolder> holderOptional = LazyOptional.of(() -> holder);
@@ -21,7 +18,7 @@ public class DFUHolderProvider implements ICapabilitySerializable<CompoundTag> {
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction arg) {
-        if (capability == IACapabilities.DFU_HOLDER) {
+        if (capability == IADFUCapabilities.DFU_HOLDER) {
             return holderOptional.cast();
         }
 

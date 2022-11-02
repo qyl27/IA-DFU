@@ -10,31 +10,8 @@ apply plugin: 'architectury-plugin'
 apply plugin: 'maven-publish'
 apply plugin: 'dev.architectury.loom'
 
-group = 'cx.rain.iadfu' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'iadfu'
-
-version = '1.19.2-1.0.0'
-/*
-if (System.getenv("CI") == "true") {
-    version += "-${System.getenv("CIRCLE_BRANCH")}"
-    version += "-${System.getenv("CIRCLE_SHA1").substring(0, 7)}"
-    version += "-${System.getenv("CIRCLE_BUILD_NUM")}"
-
-    if (System.getenv("CIRCLE_PR_USERNAME") != null) {
-        version += "-pr-${System.getenv("CIRCLE_PR_USERNAME")}"
-    }
-
-    if (System.getenv("CIRCLE_PR_NUMBER") != null) {
-        version += "-#${System.getenv("CIRCLE_PR_NUMBER")}"
-    }
-}
-*/
-var release = false
-if (release || (project.hasProperty("IA_RELEASE") && project.property("IA_RELEASE") == 'true')) {
-    version += '-release'
-} else {
-    version += '-dev'
-}
+group 'cx.rain.iadfu.test'
+archivesBaseName = 'dfutest'
 
 architectury {
     platformSetupLoomIde()
@@ -100,9 +77,7 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.19.2:2022.08.28@zip")
     }
 
-    if (!release) {
-        // Dev libs here.
-    }
+//    modImplementation project(':')
 }
 
 jar {
@@ -120,35 +95,3 @@ jar {
         ])
     }
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-import org.apache.tools.ant.filters.ReplaceTokens
-
-task injectString(type: Copy) {
-    from ('src/main/java') {
-        include '**/*.java'
-        filter(ReplaceTokens, tokens: [
-			version: project.version,
-			dataVersion: 1
-		])
-    }
-    into "${buildDir}/generated/java"
-}
-compileJava.source = "${buildDir}/generated/java"
-compileJava.dependsOn injectString

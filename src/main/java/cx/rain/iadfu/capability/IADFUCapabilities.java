@@ -10,10 +10,8 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.logging.Level;
-
 @Mod.EventBusSubscriber(modid = IADFU.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class IACapabilities {
+public class IADFUCapabilities {
     public static final Capability<IDFUHolder> DFU_HOLDER = CapabilityManager.get(new CapabilityToken<>() { });
 
     @SubscribeEvent
@@ -22,7 +20,7 @@ public class IACapabilities {
     }
 
     @SubscribeEvent
-    public static void onAttachCapabilities(AttachCapabilitiesEvent<Level> event) {
+    public static void onAttachCapabilities(AttachCapabilitiesEvent<?> event) {
         var provider = new DFUHolderProvider();
         event.addCapability(new ResourceLocation(IADFU.MODID, "dfu_holder"), provider);
         event.addListener(provider::invalidate);

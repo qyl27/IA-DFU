@@ -3,10 +3,14 @@ package cx.rain.iadfu.data.fixer;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.serialization.Dynamic;
 import cx.rain.iadfu.IADFU;
 import cx.rain.iadfu.api.data.fixer.schema.EmptySchema;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
 
 import java.util.HashMap;
@@ -60,7 +64,20 @@ public class IADataFixes {
         return new Schema(0, latestVanilla);
     }
 
-    public CompoundTag update
+    public CompoundTag update(DataFixTypes types, CompoundTag tag, int currentVersion) {
+        Dynamic<Tag> current = new Dynamic<>(NbtOps.INSTANCE, tag);
+
+        for (Map.Entry<String, DataFixerEntry> entry : dataFixers.entrySet()) {
+            DataFixerEntry dataFixerEntry = entry.getValue();
+
+            current = dataFixerEntry.dataFixer()
+                    .update(types.getType(),
+                            current,
+                            currentVersion, dataFixerEntry.dataVersion());
+        }
+
+        return (CompoundTag) current.getValue();
+    }
 
     public static class NoOpDataFixes extends IADataFixes {
         private static final Schema EMPTY_SCHEMA = new EmptySchema(0);
