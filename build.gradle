@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'eclipse'
     id 'maven-publish'
@@ -50,45 +52,11 @@ loom {
         }
     }
 
-    runs {
-        data {
-            programArg "--existing ${file("src/main/resources").absolutePath}"
-        }
-    }
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, " +
-        "JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), " +
-        "Arch: ${System.getProperty 'os.arch'}"
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
-processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-repositories {
-    flatDir {
-        dir 'libs'
-    }
-
-    maven {
-        name = 'Jitpack'
-        url = 'https://jitpack.io'
-    }
-
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
-}
-
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//    runs {
+//        data {
+//            programArg "--existing ${file("src/main/resources").absolutePath}"
+//        }
+//    }
 }
 
 dependencies {
@@ -134,19 +102,53 @@ publishing {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
+allprojects {
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-import org.apache.tools.ant.filters.ReplaceTokens
+    println "Java: ${System.getProperty 'java.version'}, " +
+            "JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), " +
+            "Arch: ${System.getProperty 'os.arch'}"
+
+    sourceSets.main.resources {
+        srcDir 'src/generated/resources'
+    }
+
+    processResources {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    }
+
+    repositories {
+        flatDir {
+            dir 'libs'
+        }
+
+        maven {
+            name = 'Jitpack'
+            url = 'https://jitpack.io'
+        }
+
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+    }
+}
 
 task injectString(type: Copy) {
     from ('src/main/java') {
         include '**/*.java'
         filter(ReplaceTokens, tokens: [
-			version: project.version,
-			dataVersion: 1
-		])
+                version: project.version,
+                dataVersion: "1"
+        ])
     }
     into "${buildDir}/generated/java"
 }

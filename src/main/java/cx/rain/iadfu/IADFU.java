@@ -15,7 +15,10 @@ public class IADFU {
     private final Logger logger = LoggerFactory.getLogger(NAME);
 
     public IADFU() {
+        logger.info("Initializing IA-DFU. Ver: " + VERSION + ".");
         INSTANCE = this;
+
+        logger.info("IA-DFU initialized.");
     }
 
     public static IADFU getInstance() {

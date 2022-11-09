@@ -1,23 +1,28 @@
-package cx.rain.iadfu.test;
+package cx.rain.iadfu_test;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(DFUTest.MODID)
 @Mod.EventBusSubscriber(modid = DFUTest.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DFUTest {
     public static final String MODID = "iadfutest";
+    public static final String NAME = "IA-DFU Test";
 
     public static final boolean IS_UPDATING = Boolean.getBoolean("iadfu.test.updating");
 
+    private final Logger logger = LoggerFactory.getLogger(NAME);
+
     public DFUTest() {
+        logger.info("Testing IA-DFU.");
+
         var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         bus.addListener(this::onRegister);

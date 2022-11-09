@@ -10,7 +10,7 @@ apply plugin: 'architectury-plugin'
 apply plugin: 'maven-publish'
 apply plugin: 'dev.architectury.loom'
 
-group 'cx.rain.iadfu.test'
+group 'cx.rain.iadfu_test'
 archivesBaseName = 'dfutest'
 
 architectury {
@@ -23,49 +23,15 @@ loom {
 
     forge {
         dataGen {
-            mod 'iadfu'
+            mod 'iadfutest'
         }
     }
 
-    runs {
-        data {
-            programArg "--existing ${file("src/main/resources").absolutePath}"
-        }
-    }
-}
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, " +
-        "JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), " +
-        "Arch: ${System.getProperty 'os.arch'}"
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
-processResources {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-repositories {
-    flatDir {
-        dir 'libs'
-    }
-
-    maven {
-        name = 'Jitpack'
-        url = 'https://jitpack.io'
-    }
-
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
-}
-
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//    runs {
+//        data {
+//            programArg "--existing ${file("src/main/resources").absolutePath}"
+//        }
+//    }
 }
 
 dependencies {
@@ -77,7 +43,7 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.19.2:2022.08.28@zip")
     }
 
-//    modImplementation project(':')
+    implementation project(':')
 }
 
 jar {
@@ -85,7 +51,7 @@ jar {
 
     manifest {
         attributes([
-                "Specification-Title"     : "iadfu",
+                "Specification-Title"     : "iadfutest",
                 "Specification-Vendor"    : "qyl27",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.name,
