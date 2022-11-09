@@ -11,8 +11,8 @@ import net.minecraftforge.registries.RegistryBuilder;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = IADFU.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class DFURegistries {
-    public static final RegistryBuilder<IADataFixer> DATA_FIXERS_BUILDER = new RegistryBuilder<IADataFixer>().setName(new ResourceLocation(IADFU.MODID, "dfus")).allowModification();
+public class IADFURegistries {
+    private static final RegistryBuilder<IADataFixer> DATA_FIXERS_BUILDER = new RegistryBuilder<IADataFixer>().setName(new ResourceLocation(IADFU.MODID, "dfus")).allowModification();
     private static Supplier<IForgeRegistry<IADataFixer>> DATA_FIXERS;
 
     @SubscribeEvent
@@ -20,7 +20,7 @@ public class DFURegistries {
         DATA_FIXERS = event.create(DATA_FIXERS_BUILDER);
     }
 
-    public static IForgeRegistry<IADataFixer> getDataFixersRegister() {
+    public static IForgeRegistry<IADataFixer> getDataFixersRegistry() {
         return DATA_FIXERS.get();
     }
 }

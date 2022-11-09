@@ -6,6 +6,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import cx.rain.iadfu.IADFU;
 import cx.rain.iadfu.api.data.fixer.schema.EmptySchema;
+import cx.rain.iadfu.api.registry.IADFURegistries;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -42,33 +43,40 @@ public class IADataFixes {
 
     private IADataFixes(Schema latestVanillaSchema) {
         latestVanilla = latestVanillaSchema;
+
+        for (var dataFixer : IADFURegistries.getDataFixersRegistry()) {
+            var name = dataFixer.getName();
+            var fixer = dataFixer.buildDataFixer();
+            var version = dataFixer.getVersion();
+            dataFixers.put(name, new DataFixerEntry(fixer, version));
+        }
     }
 
     public record DataFixerEntry(DataFixer dataFixer, int dataVersion) {
     }
 
-    public void registerFixer(String modid, int version, DataFixer fixer) {
-        if (dataFixers.containsKey(modid)) {
-            IADFU.getInstance().getLogger().error("Mod " + modid + " already registered a data fixer upper.");
-            throw new RuntimeException("Mod " + modid + " already registered a data fixer upper.");
-        }
-
-        dataFixers.put(modid, new DataFixerEntry(fixer, version));
-    }
-
-    public DataFixerEntry getFixerEntry(String modid) {
-        return dataFixers.get(modid);
-    }
-
-    public Schema createBaseSchema() {
-        return new Schema(0, latestVanilla);
-    }
+//    public void registerFixer(String modid, int version, DataFixer fixer) {
+//        if (dataFixers.containsKey(modid)) {
+//            IADFU.getInstance().getLogger().error("Mod " + modid + " already registered a data fixer upper.");
+//            throw new RuntimeException("Mod " + modid + " already registered a data fixer upper.");
+//        }
+//
+//        dataFixers.put(modid, new DataFixerEntry(fixer, version));
+//    }
+//
+//    public DataFixerEntry getFixerEntry(String modid) {
+//        return dataFixers.get(modid);
+//    }
+//
+//    public Schema createBaseSchema() {
+//        return new Schema(0, latestVanilla);
+//    }
 
     public CompoundTag update(DataFixTypes types, CompoundTag tag, int currentVersion) {
         Dynamic<Tag> current = new Dynamic<>(NbtOps.INSTANCE, tag);
 
         for (Map.Entry<String, DataFixerEntry> entry : dataFixers.entrySet()) {
-            DataFixerEntry dataFixerEntry = entry.getValue();
+            var dataFixerEntry = entry.getValue();
 
             current = dataFixerEntry.dataFixer()
                     .update(types.getType(),
@@ -86,9 +94,9 @@ public class IADataFixes {
             super(EMPTY_SCHEMA);
         }
 
-        @Override
-        public Schema createBaseSchema() {
-            return EMPTY_SCHEMA;
-        }
+//        @Override
+//        public Schema createBaseSchema() {
+//            return EMPTY_SCHEMA;
+//        }
     }
 }

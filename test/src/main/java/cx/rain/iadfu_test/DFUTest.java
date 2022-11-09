@@ -1,5 +1,6 @@
 package cx.rain.iadfu_test;
 
+import cx.rain.iadfu_test.dfu.ModDFU;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,13 +29,8 @@ public class DFUTest {
         bus.addListener(this::onRegister);
 
         if (IS_UPDATING) {
-            // Todo: test here.
-
+            ModDFU.register(bus);
         }
-    }
-
-    public void onInitDFU() {
-        // Todo.
     }
 
     public static final ResourceLocation OLD_ITEM_RL = new ResourceLocation(DFUTest.MODID, "old_item");

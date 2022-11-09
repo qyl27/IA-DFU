@@ -50,6 +50,8 @@ loom {
         dataGen {
             mod 'iadfu'
         }
+
+        mixinConfig 'mixin.iadfu.json'
     }
 
 //    runs {
